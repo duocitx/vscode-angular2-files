@@ -17,10 +17,10 @@ let config: IConfig = dJSON.parse(JSON.stringify(defaultConfig));
 
 describe('File content tests', () => {
   const fc = new FileContents();
-  fc.loadTemplates();
 
   beforeEach(() => {
     config = dJSON.parse(JSON.stringify(defaultConfig));
+    fc.loadTemplates(config);
   });
 
   describe('Class tests', () => {

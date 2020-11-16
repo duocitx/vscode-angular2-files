@@ -9,6 +9,9 @@ export const config: IConfig = {
   defaults: {
     styleExt: 'css',
     style: 'css',
+    templates: {
+      path: null
+    },
     component: {
       spec: true,
       inlineStyle: false,

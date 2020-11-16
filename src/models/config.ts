@@ -42,6 +42,7 @@ export interface IProperties {
 }
 
 export interface IDefaults {
+  templates?: { path?: string };
   styleExt: string;
   style?: string;
   class?: IProperties;

@@ -10,14 +10,20 @@ import { IConfig } from './models/config';
 import { OptionType } from './enums/option-type';
 
 export async function activate(context: ExtensionContext) {
-  const angularCli = new AngularCli();
   const cm = new ConfigurationManager();
   let config: IConfig = null;
+  const angularCli = new AngularCli();
 
-  setImmediate(async () => config = await cm.getConfig());
+  setImmediate(async () => {
+    config = await cm.getConfig();
+    await angularCli.loadTemplates(config);
+  });
 
   // watch and update on config file changes
-  cm.watchConfigFiles(async () => config = await cm.getConfig());
+  cm.watchConfigFiles(async () => {
+    config = await cm.getConfig();
+    await angularCli.loadTemplates(config);
+  });
 
   const showDynamicDialog = async (args, fileName: string, resource: ResourceType) => {
     const loc = await showFileNameDialog(args, resource, fileName);

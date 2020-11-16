@@ -8,6 +8,16 @@ This extension allows **quickly scaffold angular 2 file templates** in VS Code p
 
 ## Changelog
 
+### 1.6.5
+* Added support for .angular.json flexible file generation
+```json
+"defaults": {
+  "templates": {
+    "path": ""
+  }
+}
+```
+
 ### 1.6.4
 * Fixed issues with module imports
 * Fixed issues with comments while imporing in module
@@ -104,7 +114,7 @@ Angular Files will automatically scan you angular.json to determine which defaul
         },
         "class": {
             "spec": false
-        }, 
+        },
         "directive": {
             "flat": true,
             "spec": true
@@ -142,14 +152,14 @@ Angular Files will automatically scan you angular.json to determine which defaul
 * Fix incorrect extension in component generation
 
 ### 1.3.5
-* CPU usage improvements 
+* CPU usage improvements
 
 ### 1.3.4
 
-* Support for non angular-cli file-structure, code should reside in 'app' folder by default 
+* Support for non angular-cli file-structure, code should reside in 'app' folder by default
 * Fixed import declarations to incorrect module
 * Added route class generat template
- 
+
 ### 1.3.2
 
 * Angular-Files now supports angular-cli.json and you can use custom prefixes, different style extensions.
@@ -169,27 +179,27 @@ Angular Files will automatically scan you angular.json to determine which defaul
 * **app.module** added automatic import of dependencies
 
 ### 1.0.0
-* Integrated angular-cli for file generation 
+* Integrated angular-cli for file generation
 
 
 ## Features
 
-Right click on a file or a folder in your current project. 
+Right click on a file or a folder in your current project.
 You can find multiple options been added to the context menu:
 
 Menu Options  |
----           | 
+---           |
 New Component |
-New Directive | 
+New Directive |
 New Pipe      |
-New Service   | 
+New Service   |
 New Module    |
 
 Menu Options  |
----           | 
-New Class     | 
+---           |
+New Class     |
 New Interface |
-New Enum      | 
+New Enum      |
 
 ** Override default configuration like app prefix and style:
 ** Create a angular-cli.json (can be used without angular-cli):
@@ -224,7 +234,7 @@ New Enum      |
 **Important:** This extension due to the nature of it's purpose will create
 files on your hard drive and if necessary create the respective folder structure.
 While it should not override any files during this process, I'm not giving any guarantees
-or take any responsibility in case of lost data. 
+or take any responsibility in case of lost data.
 
 # License
 

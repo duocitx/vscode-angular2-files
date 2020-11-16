@@ -174,7 +174,7 @@ describe('Extension Tests:', () => {
 
       const componentLocation = Object.assign({}, moduleLocation, { fullPath: path.join(testPath, 'my-module', 'JeffTest'), fileName: 'JeffTest', dirPath: path.join(testPath, 'my-module') });
       const result = await angularCli.generateResources(ResourceType.Component, componentLocation, config);
-   
+
       const realModuleFileContent = fs.readFileSync(path.join(moduleLocation.fullPath, moduleFilename), 'utf-8');
 
       expect(realModuleFileContent).to.be.eql(afterModuleContent);

@@ -5,11 +5,12 @@ import { IConfig } from './models/config';
 import { toCamelCase, toUpperCase } from './formatting';
 import { promisify } from './promisify';
 import { TemplateType } from './enums/template-type';
+import { workspace } from 'vscode';
 
 const fsReaddir = promisify(fs.readdir);
 const fsReadFile = promisify(fs.readFile);
 const TEMPLATES_FOLDER = 'templates';
-const TEMPLATE_ARGUMENTS = 'inputName, upperName, interfacePrefix, cmpPrefix, dirPrefix, cmpSelector, dirSelector, componentViewEncapsulation, componentChangeDetection, componentInlineTemplate, componentInlineStyle, defaultsStyleExt, routingScope, importCommonModule, params';
+const TEMPLATE_ARGUMENTS = 'inputName, upperName, interfacePrefix, cmpPrefix, dirPrefix, cmpSelector, dirSelector, componentViewEncapsulation, componentChangeDetection, componentInlineTemplate, componentInlineStyle, defaultsStyleExt, routing, routingScope, importCommonModule, params';
 
 export class FileContents {
   private templatesMap: Map<string, Function>;
@@ -18,10 +19,21 @@ export class FileContents {
     this.templatesMap = new Map<string, Function>();
   }
 
-  async loadTemplates() {
+  async loadTemplates(config: IConfig) {
     const map = new Map();
 
-    const templatesMap = await this.getTemplates();
+    const templatesMap = await this.getTemplates(__dirname);
+
+    if (config.defaults.templates && config.defaults.templates.path) {
+      const [ws] = workspace.workspaceFolders;
+      const workspaceFolder = ws && ws.uri && ws.uri.path;
+      const fixWorkspaceFolder = workspaceFolder.substring(1);
+      
+      const projectTemplatesMap = await this.getTemplates(path.join(fixWorkspaceFolder, config.defaults.templates.path));
+      for (const [key, value] of projectTemplatesMap.entries()) {
+        templatesMap.set(key, value);
+      }
+    }
 
     for (const [key, value] of templatesMap.entries()) {
       const compiled = es6Renderer(value, TEMPLATE_ARGUMENTS);
@@ -29,10 +41,10 @@ export class FileContents {
     }
   }
 
-  private async getTemplates() {
-    const templatesPath = path.join(__dirname, TEMPLATES_FOLDER);
+  private async getTemplates(dir: string): Promise<Map<string, string>> {
+    const templatesPath = path.join(dir, TEMPLATES_FOLDER);
     const templatesFiles: string[] = await fsReaddir(templatesPath, 'utf-8');
-    const templatesFilesPromises = templatesFiles.map(t => fsReadFile(path.join(__dirname, TEMPLATES_FOLDER, t), 'utf8').then(data => [t, data]));
+    const templatesFilesPromises = templatesFiles.map(t => fsReadFile(path.join(dir, TEMPLATES_FOLDER, t), 'utf8').then(data => [t, data]));
     const templates = await Promise.all(templatesFilesPromises);
 
     return new Map(templates.map(x => x as [string, string]));
@@ -48,6 +60,7 @@ export class FileContents {
     const styleExt = config.defaults.component.styleext || config.defaults.styleExt;
     const routingScope = config.defaults.module.routingScope || 'Child';
     const importCommonModule = config.defaults.module.commonModule;
+    const routing = config.defaults.module.routing || false;
 
     const args = [inputName,
       toUpperCase(inputName),
@@ -61,6 +74,7 @@ export class FileContents {
       config.defaults.component.inlineTemplate,
       config.defaults.component.inlineStyle,
       styleExt,
+      routing,
       routingScope,
       importCommonModule,
       params];

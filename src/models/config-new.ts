@@ -19,6 +19,9 @@ export interface CliOptions {
   };
 }
 export interface SchematicOptions {
+  '@schematics/angular:templates'?: {
+    path?: string;
+  };
   '@schematics/angular:component'?: {
     inlineStyle?: boolean;
     inlineTemplate?: boolean;
